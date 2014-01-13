@@ -19,7 +19,7 @@
  *
  * Updates:
  *
- * https://gist.github.com/jbroadway/8261191
+ * https://github.com/jbroadway/au
  */
 
 if (count ($argv) === 1) {
