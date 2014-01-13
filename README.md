@@ -6,7 +6,7 @@ A thin wrapper around [ffmpeg](http://www.ffmpeg.org/) to make it easier to perf
 Setup:
 
 1. install ffmpeg
-2. save this file as 'au' in your ~/bin folder
+2. save the `au` file to your `~/bin` folder
 3. chmod the file to be executable:
 
          chmod u+x ~/bin/au
