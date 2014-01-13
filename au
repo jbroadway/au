@@ -1,0 +1,265 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * A thin wrapper around ffmpeg to make it easier to perform common
+ * audio manipulations like cutting to a specific number of beats at
+ * a set BPM, volume adjustments, joining files together, and
+ * converting between file formats or between mono and stereo.
+ *
+ * Setup:
+ *
+ * 1. install ffmpeg
+ * 2. save this file as 'au' in your ~/bin folder
+ * 3. chmod the file to be executable:
+ *
+ *         chmod u+x ~/bin/au
+ *
+ * You're all set.
+ *
+ * Updates:
+ *
+ * https://gist.github.com/jbroadway/8261191
+ */
+
+if (count ($argv) === 1) {
+	$argv[1] = 'help';
+}
+
+switch ($argv[1]) {
+	case 'cut':
+		if (count ($argv) < 5) {
+			echo "Usage: au cut file.wav 120 16 [file.wav]\n";
+			break;
+		} elseif (! file_exists ($argv[2])) {
+			echo "File not found: {$argv[2]}\n";
+			break;
+		}
+
+		$bpm = $argv[3];
+		$beats = $argv[4];
+
+		if (! is_numeric ($bpm)) {
+			echo "Error: BPM must be a numeric value.\n";
+			break;
+		}
+		if (! is_numeric ($beats)) {
+			echo "Error: Beats must be a numeric value.\n";
+			break;
+		}
+
+		$beat = (60 / $bpm);
+		$length = $beat * $beats;
+		echo 'Cutting to length: ' . $length . "\n";
+
+		if (isset ($argv[5])) {
+			$out = $argv[5];
+		} else {
+			$out = $argv[2];
+		}
+
+		system (
+			sprintf (
+				'ffmpeg -i %s -ss 0.0 -t %s %s',
+				escapeshellarg ($argv[2]),
+				$length,
+				escapeshellarg ($out)
+			)
+		);
+
+		break;
+	case 'join':
+		if (count ($argv) < 5) {
+			echo "Usage: au join file1.wav file2.wav [...file3.wav] output.wav\n";
+			break;
+		} elseif (! file_exists ($argv[2])) {
+			echo "File not found: {$argv[2]}\n";
+			break;
+		} elseif (! file_exists ($argv[3])) {
+			echo "File not found {$argv[3]}\n";
+			break;
+		}
+
+		$tmp = preg_replace ('/\.[a-z0-9]+$/i', '.txt', $argv[count ($argv) - 1]);
+		$out = '';
+		for ($i = 2; $i < count ($argv) - 1; $i++) {
+			$out .= "file '{$argv[$i]}'\n";
+		}
+		file_put_contents ($tmp, $out);
+
+		system (
+			sprintf (
+				'ffmpeg -f concat -i %s -c copy %s',
+				escapeshellarg ($tmp),
+				escapeshellarg ($argv[count ($argv) - 1])
+			)
+		);
+		
+		unlink ($tmp);
+
+		break;
+
+	case 'vol':
+		if (count ($argv) < 4) {
+			echo "Usage: au vol file.wav 0.5 [file.wav]\n";
+			break;
+		} elseif (! file_exists ($argv[2])) {
+			echo "File not found: {$argv[2]}\n";
+			break;
+		}
+
+		$vol = $argv[3];
+
+		if (! is_numeric ($vol)) {
+			echo "Error: Volume must be a numeric value.\n";
+			break;
+		}
+
+		if (isset ($argv[4])) {
+			$out = $argv[4];
+		} else {
+			$out = $argv[2];
+		}
+
+		system (
+			sprintf (
+				'ffmpeg -i %s -af volume=%s %s',
+				escapeshellarg ($argv[2]),
+				$vol,
+				escapeshellarg ($out)
+			)
+		);
+
+		break;
+		
+
+	case 'mp3':
+		if (count ($argv) < 3) {
+			echo "Usage: au mp3 file.wav [file.mp3]\n";
+			break;
+		} elseif (! file_exists ($argv[2])) {
+			echo "File not found: {$argv[2]}\n";
+			break;
+		}
+
+		if (isset ($argv[3])) {
+			$out = $argv[3];
+		} else {
+			$out = preg_replace ('/\.([a-z0-9]+)$/i', '.mp3', $argv[2]);
+		}
+
+		system (
+			sprintf (
+				'ffmpeg -i %s -ab 192k %s',
+				escapeshellarg ($argv[2]),
+				escapeshellarg ($out)
+			)
+		);
+		break;
+
+	case 'wav':
+		if (count ($argv) < 3) {
+			echo "Usage: au wav file.aif [file.wav]\n";
+			break;
+		} elseif (! file_exists ($argv[2])) {
+			echo "File not found: {$argv[2]}\n";
+			break;
+		}
+
+		if (isset ($argv[3])) {
+			$out = $argv[3];
+		} else {
+			$out = preg_replace ('/\.([a-z0-9]+)$/i', '.wav', $argv[2]);
+		}
+
+		system (
+			sprintf (
+				'ffmpeg -i %s %s',
+				escapeshellarg ($argv[2]),
+				escapeshellarg ($out)
+			)
+		);
+		break;
+	
+	case 'mono':
+		if (count ($argv) < 3) {
+			echo "Usage: au mono file.aif [file.aif]\n";
+			break;
+		} elseif (! file_exists ($argv[2])) {
+			echo "File not found: {$argv[2]}\n";
+			break;
+		}
+
+		if (isset ($argv[3])) {
+			$out = $argv[3];
+		} else {
+			$out = $argv[2];
+		}
+
+		system (
+			sprintf (
+				'ffmpeg -i %s -ac 1 %s',
+				escapeshellarg ($argv[2]),
+				escapeshellarg ($out)
+			)
+		);
+		break;
+	
+	case 'stereo':
+		if (count ($argv) < 3) {
+			echo "Usage: au stereo file.aif [file.aif]\n";
+			break;
+		} elseif (! file_exists ($argv[2])) {
+			echo "File not found: {$argv[2]}\n";
+			break;
+		}
+
+		if (isset ($argv[3])) {
+			$out = $argv[3];
+		} else {
+			$out = $argv[2];
+		}
+
+		system (
+			sprintf (
+				'ffmpeg -i %s -ac 2 %s',
+				escapeshellarg ($argv[2]),
+				escapeshellarg ($out)
+			)
+		);
+		break;
+
+	default:
+		echo <<<END
+Usage: au command [<args>]
+
+Available subcommands:
+
+    cut       cut file to specified bpm*beats for making loops
+    join      join files together to make one audio file
+    vol       adjust the volume of a file
+    mp3       convert to an mp3 of the same name
+    wav       convert to a wav of the same name
+    mono      convert stereo to mono
+    stereo    convert mono to stereo
+
+Exampes:
+
+    # cut verses.wav to 4 bars at 132bpm
+    au cut verses.wav 132 16 verses-cut.wav
+
+    # convert aif to wav
+    au wav verses.aif
+    
+    # halve the volume of a clip
+    au vol verses.aif 0.5
+    
+    # join some files
+    au join verse.wav chorus.wav verse.wav song.wav
+
+
+END;
+		break;
+}
+
+?>
