@@ -4,7 +4,7 @@
 
 ### Setup
 
-1. install ffmpeg
+1. install [ffmpeg](http://www.ffmpeg.org/) (Linux users may need to install [PHP](http://php.net/) too)
 2. save the `au` file to your `~/bin` folder
 3. chmod the file to be executable:
 
