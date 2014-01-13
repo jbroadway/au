@@ -1,6 +1,6 @@
 # au
 
-`au` is a little script to make [ffmpeg](http://www.ffmpeg.org/) easier to use for common audio manipulations like cutting to a specific number of beats at a set BPM, volume adjustments, joining files together, and converting between file formats or between mono and stereo. I made this to automate the job of preparing files for various audio hardware that I use in my live shows.
+[au](http://jbroadway.github.io/au/) is a little script to make [ffmpeg](http://www.ffmpeg.org/) easier to use for common audio manipulations like cutting to a specific number of beats at a set BPM, volume adjustments, joining files together, and converting between file formats or between mono and stereo. I made this to automate the job of preparing files for various audio hardware that I use in my live shows.
 
 ### Setup
 
