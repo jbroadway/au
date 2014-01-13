@@ -1,6 +1,6 @@
 # au
 
-A thin wrapper around [ffmpeg](http://www.ffmpeg.org/) to make it easier to perform common audio manipulations like cutting to a specific number of beats at a set BPM, volume adjustments, joining files together, and converting between file formats or between mono and stereo.
+`au` is a little script to make [ffmpeg](http://www.ffmpeg.org/) easier to use for common audio manipulations like cutting to a specific number of beats at a set BPM, volume adjustments, joining files together, and converting between file formats or between mono and stereo. I made this to automate the job of preparing files for various audio hardware that I use in my live shows.
 
 ### Setup
 
@@ -22,7 +22,7 @@ You're all set.
     au mono   stereo.wav mono.wav                            # convert stereo to mono
     au stereo mono.wav stereo.wav                            # convert mono to stereo
 
-### Exampes
+### Examples
 
     # cut verses.wav to 4 bars at 132bpm
     au cut verses.wav 132 16 verses-cut.wav
@@ -35,3 +35,9 @@ You're all set.
     
     # join some files together as song.wav
     au join verse.wav chorus.wav verse.wav song.wav
+
+### Author
+
+Aband*nthecar / Johnny Broadway<br>
+http://www.abandonthecar.com<br>
+http://www.johnnybroadway.com
