@@ -1,16 +1,18 @@
 # au
 
-[au](http://jbroadway.github.io/au/) is a little script to make [ffmpeg](http://www.ffmpeg.org/) easier to use for common audio manipulations like cutting to a specific number of beats at a set BPM, volume adjustments, joining files together, and converting between file formats or between mono and stereo. I made this to automate the job of preparing files for various audio hardware that I use in my live shows.
+[au](http://jbroadway.github.io/au/) is a little script to make [ffmpeg](http://www.ffmpeg.org/) and [sox](http://sox.sourceforge.net/) easier to use for common audio manipulations like cutting to a specific number of beats at a set BPM, volume adjustments, joining files together, and converting between file formats or between mono and stereo. I made this to automate the job of preparing files for various audio hardware that I use in my live shows.
 
 ### Setup
 
-1. install [ffmpeg](http://www.ffmpeg.org/) (Linux users may need to install [PHP](http://php.net/) too)
+1. install [ffmpeg](http://www.ffmpeg.org/) and [sox](http://sox.sourceforge.net/) (Linux users may need to install [PHP](http://php.net/) too)
 2. save the `au` file to your `~/bin` folder
 3. chmod the file to be executable:
 
          chmod u+x ~/bin/au
 
-You're all set.
+You're all set, now run:
+
+    au help
 
 ### Available commands
 
