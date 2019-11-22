@@ -29,6 +29,63 @@ if (count ($argv) === 1) {
 }
 
 switch ($argv[1]) {
+	case 'pad':
+		if (count ($argv) < 5) {
+			echo "Usage: au pad file.wav start|end 0.5 [file.wav]\n";
+			break;
+		} elseif (! file_exists ($argv[2])) {
+			echo "File not found: {$argv[2]}\n";
+			break;
+		}
+		
+		$pos = $argv[3];
+		$len = $argv[4];
+		
+		if ($pos != 'start' && $pos != 'end') {
+			echo "Error: Position must be either 'start' or 'end'.\n";
+			break;
+		}
+		if (! is_numeric ($len)) {
+			echo "Error: Duration must be a numeric value.\n";
+			break;
+		}
+		
+		echo 'Padding ' . $pos . ' with ' . $len . "s silence.\n";
+
+		if (isset ($argv[5])) {
+			$out = $argv[5];
+		} else {
+			$out = $argv[2];
+		}
+		
+		system (
+			sprintf (
+				'sox -n -r 44100 -c 2 au.tmp.silence.wav trim 0.0 %s',
+				$len
+			)
+		);
+		
+		if ($pos == 'start') {
+			system (
+				sprintf (
+					'sox au.tmp.silence.wav %s %s',
+					escapeshellarg ($argv[2]),
+					escapeshellarg ($out)
+				)
+			);
+		} else {
+			system (
+				sprintf (
+					'sox %s au.tmp.silence.wav %s',
+					escapeshellarg ($argv[2]),
+					escapeshellarg ($out)
+				)
+			);
+		}
+
+		unlink ('au.tmp.silence.wav');
+
+		break;
 	case 'cut':
 		if (count ($argv) < 5) {
 			echo "Usage: au cut file.wav 120 16 [file.wav]\n";
@@ -239,6 +296,7 @@ Available subcommands:
 
     cut       cut file to specified bpm*beats for making loops
     join      join files together to make one audio file
+    pad       pad start or end of file with silence
     vol       adjust the volume of a file
     mp3       convert to an mp3 of the same name
     wav       convert to a wav of the same name
@@ -258,6 +316,9 @@ Exampes:
     
     # join some files
     au join verse.wav chorus.wav verse.wav song.wav
+    
+    # pad a file with 2 seconds of silence at the end
+    au pad song.wav end 2.0 padded.wav
 
 
 END;
