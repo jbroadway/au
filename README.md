@@ -18,6 +18,7 @@ You're all set, now run:
 
     au cut    input.wav 120 16 ouput.wav                     # cut file to specified bpm*beats for making loops
     au join   file1.wav file2.wav [...file3.wav] output.wav  # join files together to make one audio file
+    au pad    input.wav end 2.0 padded.wav                   # pad start or end of file with silence
     au vol    input.wav 0.5 output.wav                       # adjust the volume of a file
     au mp3    input.wav output.mp3                           # convert to an mp3 of the same name
     au wav    input.aif output.wav                           # convert to a wav of the same name
@@ -37,6 +38,9 @@ You're all set, now run:
     
     # join some files together as song.wav
     au join verse.wav chorus.wav verse.wav song.wav
+    
+    # pad a file with 2 seconds of silence at the end
+    au pad song.wav end 2.0 padded.wav
 
 ### Author
 
